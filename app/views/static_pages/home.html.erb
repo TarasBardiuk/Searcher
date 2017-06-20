@@ -4,6 +4,7 @@
       <h1><%= link_to 'SEARCHER', root_path %></h1>
       <%= form_tag root_path, method: 'get', id: 'search_form' do %>
           <%= text_field_tag(:query, params[:query],
+                             placeholder: 'Search...',
                              autofocus: true, autocomplete: 'off',
                              class: 'form-control') %>
       <% end %>

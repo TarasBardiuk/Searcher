@@ -2,17 +2,17 @@
   <table class="table table-bordered table-hover">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Designed by</th>
+        <th class="col-md-2">Name</th>
+        <th class="col-md-4">Type</th>
+        <th class="col-md-6">Designed by</th>
       </tr>
     </thead>
     <tbody>
       <% @data.each do |hash| %>
         <tr>
-          <td class="col-md-2"><%= hash['Name'] %></td>
-          <td class="col-md-4"><%= hash['Type'] %></td>
-          <td class="col-md-6"><%= hash['Designed by'] %></td>
+          <td><%= hash['Name'] %></td>
+          <td><%= hash['Type'] %></td>
+          <td><%= hash['Designed by'] %></td>
         </tr>
       <% end %>
     </tbody>
