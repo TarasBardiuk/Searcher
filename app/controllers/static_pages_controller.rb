@@ -9,16 +9,6 @@ class StaticPagesController < ApplicationController
     end
   end
 
-  def search
-    @filtered = []
-    query = params[:query].split(/\s+(?=(?:[^"]*"[^"]*")*[^"]*$)/)
-    @data = JSON.parse(File.read('data.json'))
-    query.each do |search_word|
-      @data = filter(@data, search_word)
-    end
-    puts @data
-  end
-
   private
 
   def filter(data_array, word)
