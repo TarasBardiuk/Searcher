@@ -7,7 +7,7 @@ of the specified structure and getting the results in the form of a table._
 
 * Implementation uses Ruby on Rails, JavaScript and HTML, including some 
 additional libraries - Bootstrap and jQuery.
-* Application is based on Ruby 2.4.0 and Rails 5.0.1.
+* Application is based on Ruby 2.4.0 and Rails 5.0.1, Trailblazer 2.0.
 * As incoming data, application uses JSON-file **data.json** located in the 
 root directory.
 * Search logic is implemented in Ruby and written by repository owner.

@@ -1,21 +1,41 @@
-class FilterService
-  class << self
-    def data(query)
+require 'trailblazer/operation'
+
+module Filter
+  class JSONFile < Trailblazer::Operation
+    step :get_data
+    step :fill_data
+
+    def get_data(options, params:, **)
       # Read and parse JSON-file, and transform all hash values to uppercase
-      data = value_upcase(JSON.parse(File.read('data.json')))
-      if query
-        # If search query exists, we split it using regex, which also handles
-        # input with double quotes
-        query_array = query.upcase.split(/\s+(?=(?:[^"]*"[^"]*")*[^"]*$)/)
-        query_array.each do |search_word|
-          search_word = search_word[1..-2] if search_word.include?('"')
-          data = matcher(data, search_word)
-        end
+      options['data'] = value_upcase(JSON.parse(File.read('data.json')))
+      # If search query exists, next step 'fill_data' will be executed
+      params[:query]
+      # Otherwise operation stops
+    end
+
+    def fill_data(options, params:, **)
+      # Split search query using regex, which also handles input with double
+      # quotes
+      query = params[:query].upcase.split(/\s+(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+      query.each do |word|
+        word = unquote(word)
+        options['data'] = matcher(options['data'], word)
       end
-      data
     end
 
     private
+
+    def value_upcase(data_array)
+      # Used for case-insensitive search.
+      data_array.each do |hash|
+        hash.each { |k, v| v.upcase! }
+      end
+    end
+
+    def unquote(word)
+      # Used for double quotes deletion around the search query
+      word[0] == ('"') && word[-1] == ('"') ? word[1..-2] : word
+    end
 
     def matcher(data_array, word)
       matched = []
@@ -40,17 +60,10 @@ class FilterService
       # Adds ':relevance' to hash to estimate the value of the result.
       # Matching in 'Name' field is the most expensive.
       hash[:relevance] = 0
-      hash[:relevance] += hash['Name'].include?(word) ? 3 :
+      hash[:relevance] += hash['Name'].include?(word) ? 3 : 
                             hash['Type'].include?(word) ? 2 :
                               hash['Designed by'].include?(word) ? 1 : 0
       hash
-    end
-
-    def value_upcase(data_array)
-      # Uses for case-insensitive search.
-      data_array.each do |hash|
-        hash.each { |k, v| v.upcase! }
-      end
     end
   end
 end

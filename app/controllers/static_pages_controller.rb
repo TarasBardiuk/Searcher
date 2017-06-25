@@ -1,5 +1,6 @@
 class StaticPagesController < ApplicationController
   def home
-    @data = FilterService.data(params[:query])
+    run Filter::JSONFile
+    @data = result['data']
   end
 end
